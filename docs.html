@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillForge Docs — model, API, demo activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0713;--panel:#120d1f;--panel2:#1a1230;--accent:#8b5cf6;--accent2:#7c3aed;--text:#f2ecff;--muted:#9d8ec2;--line:rgba(242,236,255,.09);--line2:rgba(242,236,255,.2)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;line-height:1.55;min-height:100vh}
+a{color:var(--accent)}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px}
+nav{border-bottom:1px solid var(--line);background:rgba(10,7,19,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}
+.logo i{width:18px;height:18px;border-radius:5px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:inline-block}
+.nav-links{display:flex;align-items:center;gap:22px;font-size:13.5px;color:var(--muted)}
+.nav-links a.on{color:var(--accent)}
+.btn{font-family:inherit;font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:8px;border:none;cursor:pointer}
+.btn-a{background:var(--accent);color:#0a0713}
+select#netSel{background:var(--panel);border:1px solid var(--line2);border-radius:8px;font-family:inherit;font-size:12px;padding:9px;color:var(--text)}
+.toc{padding:18px 0;font-size:13px;color:var(--muted)}
+.toc a{margin-right:16px}
+h2{font-size:22px;margin:34px 0 12px;letter-spacing:-.01em}
+p{color:var(--muted);font-size:14.5px;margin-bottom:10px}
+.kv{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;grid-template-columns:130px 1fr;gap:10px 18px;font-size:13.5px;margin:14px 0}
+.kv .k{color:var(--muted)}
+.kv .v{color:var(--text);overflow-wrap:anywhere}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th{color:var(--muted);text-align:left;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:11px;padding:8px 10px;border-bottom:1px solid var(--line2)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.mono{font-family:ui-monospace,monospace}
+pre{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:16px 18px;font-size:12.5px;overflow-x:auto;margin:14px 0}
+footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-size:13.5px;margin-top:50px}
+.proof{display:block;max-width:440px;margin-top:18px;padding:16px 18px;background:var(--panel);border:1px solid var(--line2);border-radius:8px}
+.proof-title{font-family:ui-monospace,'Courier New',monospace;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.proof-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-family:ui-monospace,'Courier New',monospace;font-size:12px;color:var(--muted)}
+.proof-grid .val{color:var(--accent);overflow-wrap:anywhere}
+.proof-links{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.proof-link{font-family:ui-monospace,'Courier New',monospace;font-size:11px;color:var(--accent);border-bottom:1px solid var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+<div class="logo"><i></i>SkillForge</div>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="app.html">App</a>
+<a href="docs.html" class="on">Docs</a>
+<select id="netSel"><option value="968">Testnet 968</option><option value="677" selected>Mainnet 677</option></select>
+<button class="btn btn-a" id="connectBtn">Connect wallet</button>
+</div>
+</div></nav>
+
+<div class="wrap">
+<div class="toc"><a href="#deploy">Deployment</a><a href="#model">Model</a><a href="#abi">Contract API</a><a href="#demo">Demo activity</a><a href="#build">Build & verify</a></div>
+
+<h2 id="deploy">Deployment</h2>
+<p>SkillMarket on BOT Chain mainnet (chain 677).</p>
+<div class="kv">
+<div class="k">Chain</div><div class="v">BOT Chain Mainnet · chainId 677 · RPC https://rpc.botchain.ai · explorer https://scan.botchain.ai</div>
+<div class="k">SkillMarket</div><div class="v"><a href="https://scan.botchain.ai/address/0x6374E48A1196Bdb5AD05F3C1Ca6C8042f84Db88E" target="_blank" rel="noopener">0x6374E48A1196Bdb5AD05F3C1Ca6C8042f84Db88E</a> · verified ✓</div>
+<div class="k">Fee token</div><div class="v">WBOT <a href="https://scan.botchain.ai/address/0xD5452816194a3784dBa983426cCe7c122F4abd30" target="_blank" rel="noopener">0xD5452816194a3784dBa983426cCe7c122F4abd30</a></div>
+<div class="k">Fee</div><div class="v">2.5% per settled receipt, to the treasury</div>
+<div class="k">Compiler</div><div class="v">solc 0.8.30+commit.73712a01 · optimizer 200 runs · evmVersion cancun · flattened-code verification</div>
+</div>
+
+<h2 id="model">Model</h2>
+<p>SkillForge turns agent skills into tradeable, provable modules. A publisher lists a skill with a metadata URI (spec, entrypoint, docs) and a price per use. A buyer — usually an agent owner — pays for a run and can name the agent that will execute it. The payment is escrowed in the contract, not sent to the publisher.</p>
+<p>When the run settles, the buyer either confirms success — the publisher is paid minus a 2.5% platform fee — or opens a dispute. Disputes go to the contract arbiter, whose ruling pays the publisher or refunds the buyer and updates the publisher's on-chain counters. Reputation is therefore derived from settled executions, not reviews: successCount and failCount are readable by anyone, and the same primitives plug into AgentVault-style policy engines that decide which skills an agent may buy.</p>
+
+<h2 id="abi">Contract API</h2>
+<table>
+<tr><th>Method</th><th>Signature</th><th>Notes</th></tr>
+<tr><td class="mono">publish</td><td class="mono">(string metadataURI, uint256 pricePerUse)</td><td>List a skill; returns skillId</td></tr>
+<tr><td class="mono">setPrice</td><td class="mono">(uint256 skillId, uint256 newPrice)</td><td>Publisher only; bumps version</td></tr>
+<tr><td class="mono">useSkill</td><td class="mono">(uint256 skillId, address agent)</td><td>Escrows pricePerUse; returns receiptId</td></tr>
+<tr><td class="mono">confirmSuccess</td><td class="mono">(uint256 receiptId)</td><td>Buyer only; pays publisher minus 2.5%</td></tr>
+<tr><td class="mono">disputeExecution</td><td class="mono">(uint256 receiptId)</td><td>Buyer only; freezes receipt for arbiter</td></tr>
+<tr><td class="mono">resolveDispute</td><td class="mono">(uint256 receiptId, bool publisherAtFault)</td><td>Arbiter only; pays or refunds</td></tr>
+<tr><td class="mono">getSkill / getReceipt</td><td class="mono">(uint256) → struct fields</td><td>Full state reads</td></tr>
+</table>
+<p>Events: <span class="mono">SkillPublished, PriceUpdated, SkillDeactivated, SkillUsed, ExecutionConfirmed, ExecutionDisputed, DisputeResolved</span>.</p>
+
+<h2 id="demo">Demo activity</h2>
+<p>Seven mainnet demo transactions executed after deployment — all status ok, all methods decode by name on BOTScan. Two skills listed, two runs bought, one confirmed and one settled through the dispute path:</p>
+<table>
+<tr><th>#</th><th>Method</th><th>Actor</th><th>Description</th><th>Tx</th></tr>
+<tr><td>1</td><td class="mono">publish</td><td>Wallet A</td><td>mcp-web-search listed at 0.01 WBOT per use</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x92f803b096694b848faac2c9b2525e94f4fc7f2732de31948fe27e69a4a2a9ad" target="_blank" rel="noopener">0x92f803b0…a9ad</a></td></tr>
+<tr><td>2</td><td class="mono">publish</td><td>Wallet B</td><td>defi-payment-handler listed at 0.005 WBOT</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x885f1e5ff95c1caf45f0477c9db1f5f87b04b78cddad90004d23b635f29d668c" target="_blank" rel="noopener">0x885f1e5f…d668c</a></td></tr>
+<tr><td>3</td><td class="mono">useSkill</td><td>Wallet B</td><td>Run of skill #0 bought for agent C — 0.01 WBOT escrowed</td><td class="mono"><a href="https://scan.botchain.ai/tx/0xf7a8ea118967da8ee5d10fce48b02a44dc0a10ce12807ccac733ee7d2839ef00" target="_blank" rel="noopener">0xf7a8ea11…ef00</a></td></tr>
+<tr><td>4</td><td class="mono">confirmSuccess</td><td>Wallet B</td><td>Buyer confirms — publisher A paid</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x60c3f96284af81d312918a69851138156edfa8c7e5ce044b4e38931ae23480cc" target="_blank" rel="noopener">0x60c3f962…80cc</a></td></tr>
+<tr><td>5</td><td class="mono">useSkill</td><td>Wallet C</td><td>Second run of skill #0 — third wallet on the contract</td><td class="mono"><a href="https://scan.botchain.ai/tx/0xfaed72c30f83ca83c138304b447e5a365e9abf6e9cc59a0969eaa94256072eee" target="_blank" rel="noopener">0xfaed72c3…2eee</a></td></tr>
+<tr><td>6</td><td class="mono">disputeExecution</td><td>Wallet C</td><td>Buyer disputes receipt #1</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x33e8d3dc203d659239774bdd36f720bb9c81a2a9a74500c540fac5395ebac080" target="_blank" rel="noopener">0x33e8d3dc…c080</a></td></tr>
+<tr><td>7</td><td class="mono">resolveDispute</td><td>deployer (arbiter)</td><td>Resolved in the publisher's favor</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x705ee05ab0113a4d36c9415015f14ce12c93efb2b2ec6eac75d6856fef451626" target="_blank" rel="noopener">0x705ee05a…1626</a></td></tr>
+</table>
+<p>The contract carries 8 mainnet explorer transactions: 1 deploy + 7 demo across three wallets.</p>
+
+<h2 id="build">Build & verify</h2>
+<pre>cd botchain-builds/agent-vault
+node build2.mjs                    # solc 0.8.30 → artifacts/skillforge/*.bin|.abi
+node deploy-2-mainnet.mjs          # deploy to chain 677 → deployed-mainnet-2.json
+node demo-2-mainnet.mjs            # publish + buy + confirm + dispute lifecycle
+node make-flat-2.mjs               # SPDX-dedupe flatten + byte-match recompile
+node submit-verify-2-mainnet.mjs   # POST flattened-code → scan.botchain.ai</pre>
+<p>Flatten output lives in <code>agent-vault/verify2/*.flat.sol</code>. Each flat was recompiled and byte-matched against the deployed runtime before submission (<code>FLAT MATCH</code> ×2).</p>
+</div>
+
+<footer><div class="wrap">
+<p style="margin-bottom:2px">SkillForge — agent skills marketplace on BOT Chain. Live on mainnet; real assets with real value.</p>
+<div class="proof">
+<div class="proof-title">Proof on BOT Mainnet</div>
+<div class="proof-grid">
+<span>Chain ID</span><span class="val">677</span>
+<span>Contract</span><span class="val">0x6374E48A1196Bdb5AD05F3C1Ca6C8042f84Db88E</span>
+</div>
+<div class="proof-links">
+<a href="https://botchain.ai" target="_blank" rel="noopener" class="proof-link">BOT Chain Website &#8599;</a>
+<a href="https://scan.botchain.ai/" target="_blank" rel="noopener" class="proof-link">BOTScan Explorer &#8599;</a>
+</div>
+</div>
+</div></footer>
+
+<script type="importmap">
+{"imports":{"ethers":"https://esm.sh/ethers@6.13.2","@reown/appkit":"https://esm.sh/@reown/appkit@1.8.21","@reown/appkit-adapter-ethers":"https://esm.sh/@reown/appkit-adapter-ethers@1.8.21"}}
+</script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
