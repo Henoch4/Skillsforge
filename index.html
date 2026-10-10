@@ -39,9 +39,9 @@ select#netSel{background:var(--card);border:2px solid var(--fg);border-radius:99
 <nav><a class="lg" href="index.html">Skill<span>Forge</span></a><span style="display:flex;gap:18px;align-items:center;font-size:14px"><a href="index.html">Home</a><a href="app.html">App</a><a href="docs.html">Docs</a><select id="netSel"><option value="968">Testnet 968</option><option value="677" selected>Mainnet 677</option></select><button class="cw" id="themeBtn" title="Theme">☀</button><button class="cw" id="connectBtn">Connect wallet</button></span></nav>
 <header class="hero"><div class="rv"><h1>Sell skills. <em>Prove every run.</em></h1><p>An agent skills marketplace on BOT Chain. Publish a skill once, get paid every time an agent runs it. Buyers never pay for work that didn't happen.</p><div class="cta"><a href="#skills">Run a skill</a><a href="app.html">Open app →</a><button id="pub">Publish yours</button></div></div>
 <div class="prt rv"><div class="slot"><i></i></div><div class="out" id="out"></div></div></header>
-<div class="stt rv"><div><b id="s1">—</b><span>Skills listed</span></div><div><b id="s2">—</b><span>Usage receipts</span></div><div><b id="s3">—</b><span>Volume (WBOT)</span></div><div><b>2.5%</b><span>Platform fee</span></div></div>
+<div class="stt rv"><div><b id="s1">—</b><span>Skills listed</span></div><div><b id="s2">—</b><span>Usage receipts</span></div><div><b id="s3">—</b><span>Volume (<span id="volsym">WBOT</span>)</span></div><div><b>2.5%</b><span>Platform fee</span></div></div>
 <section class="sk" id="skills"><h2 class="rv">The shelf</h2><div class="rw" id="rw"></div>
-<div class="pb rv" id="pb"><label>Skill name<input id="pn" placeholder="PDF Extractor"></label><label>Docs link<input id="pl" placeholder="https://docs…"></label><label>Price per run (WBOT)<input id="pp" value="0.1"></label><button class="gb" id="pg">Publish skill</button></div></section>
+<div class="pb rv" id="pb"><label>Skill name<input id="pn" placeholder="PDF Extractor"></label><label>Docs link<input id="pl" placeholder="https://docs…"></label><label>Price per run (<span id="cursym">WBOT</span>)<input id="pp" value="0.1"></label><button class="gb" id="pg">Publish skill</button></div></section>
 <section class="how"><div class="rv"><i>01</i><h4>Publish</h4><p>A developer posts a tool with a link to its docs and a price per run.</p></div><div class="rv"><i>02</i><h4>Pay per use</h4><p>An agent owner buys a run. The money waits in the contract, not in anyone's pocket.</p></div><div class="rv"><i>03</i><h4>Confirm or dispute</h4><p>The buyer confirms and the seller is paid instantly, or flags a dispute for the arbiter.</p></div></section>
 <footer><div class="wrap">
 <p style="margin-bottom:2px">SkillForge — agent skills marketplace on BOT Chain. Live on mainnet; real skills with real receipts.</p>
@@ -96,8 +96,8 @@ const NETS = {
   677: { id: 677, name: 'BOT Chain', nativeCurrency: { name: 'BOT', symbol: 'BOT', decimals: 18 }, rpcUrls: { default: { http: ['https://rpc.botchain.ai'] } }, blockExplorers: { default: { name: 'BOTScan', url: 'https://scan.botchain.ai' } } },
 };
 const CHAINS = {
-  968: { sk: '0x21809f45ad2Aac2eb24fd017cEBfecf4eE689149', wbot: '0xD8FBaBf44B2dbb427d881F8Ea66F14D8287A55c0' },
-  677: { sk: '0x6374E48A1196Bdb5AD05F3C1Ca6C8042f84Db88E', wbot: '0xD5452816194a3784dBa983426cCe7c122F4abd30' },
+  968: { sk: '0x21809f45ad2Aac2eb24fd017cEBfecf4eE689149', wbot: '0xD8FBaBf44B2dbb427d881F8Ea66F14D8287A55c0', sym: 'TestWBOT' },
+  677: { sk: '0x6374E48A1196Bdb5AD05F3C1Ca6C8042f84Db88E', wbot: '0xD5452816194a3784dBa983426cCe7c122F4abd30', sym: 'WBOT' },
 };
 const SK_ABI = [
   'function totalSkills() view returns (uint256)',
@@ -122,7 +122,7 @@ const GAS = { gasPrice: ethers.parseUnits('20', 'gwei') };
 let currentChainId = 677;
 let account = null;
 let appkit = null;
-let rcSeq = 0;
+let curSym = 'WBOT';
 
 function rpc() { return new ethers.JsonRpcProvider(currentChainId === 677 ? 'https://rpc.botchain.ai' : 'https://rpc.bohr.life'); }
 const short = (a) => (a ? a.slice(0, 6) + '…' + a.slice(-4) : '—');
@@ -148,19 +148,23 @@ function initAppKit() {
 
 async function refresh() {
   try {
-    const c = CHAINS[currentChainId];
-    const p = rpc();
+  const c = CHAINS[currentChainId];
+  curSym = c.sym;
+  const p = rpc();
     const sk = new ethers.Contract(c.sk, SK_ABI, p);
     const [skills, receipts, volume] = await Promise.all([sk.totalSkills(), sk.totalReceipts(), sk.totalVolume()]);
     const s1 = $("#s1"), s2 = $("#s2"), s3 = $("#s3");
     if (s1) s1.textContent = fmt(Number(skills));
     if (s2) s2.textContent = fmt(Number(receipts));
     if (s3) s3.textContent = fmt(Number(ethers.formatEther(volume)), 2);
-    await renderShelf(sk);
+    const cs = $("#cursym"), vs = $("#volsym");
+    if (cs) cs.textContent = c.sym;
+    if (vs) vs.textContent = c.sym;
+    await renderShelf(sk, c.sym);
   } catch (e) { console.error(e); }
 }
 
-async function renderShelf(sk) {
+async function renderShelf(sk, sym) {
   const rw = $("#rw");
   if (!rw) return;
   const total = Number(await sk.totalSkills().catch(() => 0n));
@@ -174,7 +178,7 @@ async function renderShelf(sk) {
       const tot = Number(ok) + Number(bad);
       const pct = tot > 0 ? Math.round((Number(ok) / tot) * 100) : 100;
       const name = uri.length > 34 ? uri.slice(0, 32) + '…' : uri;
-      html += `<div class="sc"><h4>${esc(name)}</h4><p>by ${short(pub)} · v${ver}${active ? '' : ' · inactive'}</p><div class="pr">${fmtE(price)} WBOT</div><div>${Number(uses)} settled · ${Number(bad)} disputes</div><div class="rp"><i style="width:${pct}%"></i></div><button data-i="${i}" ${active ? '' : 'disabled style="opacity:.4"'}>Run skill</button></div>`;
+      html += `<div class="sc"><h4>${esc(name)}</h4><p>by ${short(pub)} · v${ver}${active ? '' : ' · inactive'}</p><div class="pr">${fmtE(price)} ${sym}</div><div>${Number(uses)} settled · ${Number(bad)} disputes</div><div class="rp"><i style="width:${pct}%"></i></div><button data-i="${i}" ${active ? '' : 'disabled style="opacity:.4"'}>Run skill</button></div>`;
     } catch { /* skip */ }
   }
   rw.innerHTML = html || '<div class="sc"><h4>No skills yet</h4><p>Publish the first one below.</p></div>';
@@ -186,7 +190,7 @@ function printReceipt({ id, skill, price, fee, to, status, mine }) {
   const el = document.createElement("div");
   el.className = "rc";
   el.id = "r" + id;
-  el.innerHTML = `<h5><span>SkillForge</span><span>Run #${String(id).padStart(4, "0")}</span></h5><div class="r"><span>Skill</span><b>${esc(skill)}</b></div><div class="r"><span>Price</span><span>${price} WBOT</span></div><div class="r"><span>Platform fee 2.5%</span><span>${fee}</span></div><div class="r"><span>Seller receives</span><b>${to}</b></div><div class="r"><span>Status</span><b class="stx">${status}</b></div>${mine ? `<div class="sg"><button class="c" data-c="${id}">Confirm run</button><button data-x="${id}">Dispute</button></div>` : ``}`;
+  el.innerHTML = `<h5><span>SkillForge</span><span>Run #${String(id).padStart(4, "0")}</span></h5><div class="r"><span>Skill</span><b>${esc(skill)}</b></div><div class="r"><span>Price</span><span>${price} ${curSym}</span></div><div class="r"><span>Platform fee 2.5%</span><span>${fee}</span></div><div class="r"><span>Seller receives</span><b>${to}</b></div><div class="r"><span>Status</span><b class="stx">${status}</b></div>${mine ? `<div class="sg"><button class="c" data-c="${id}">Confirm run</button><button data-x="${id}">Dispute</button></div>` : ``}`;
   out.prepend(el);
   while (out.children.length > 3) out.lastChild.remove();
   return el;
