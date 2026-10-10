@@ -8,7 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0713;--panel:#120d1f;--panel2:#1a1230;--accent:#8b5cf6;--accent2:#7c3aed;--danger:#ef4444;--text:#f2ecff;--muted:#9d8ec2;--line:rgba(242,236,255,.09);--line2:rgba(242,236,255,.2)}
+:root{--bg:#14110f;--fg:#f2ede4;--mut:#a79d8e;--line:#3a322b;--card:#211c18;--acc:#ff5a1f;--acc2:#f2ede4;--onacc:#14110f}@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14110f;--fg:#f2ede4;--mut:#a79d8e;--line:#3a322b;--card:#211c18;--acc:#ff5a1f;--acc2:#f2ede4;--onacc:#14110f}}@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#ece6d9;--fg:#14110f;--mut:#6b6254;--line:#d3c9b4;--card:#f8f4ea;--acc:#c2370a;--acc2:#14110f;--onacc:#ffffff}}:root[data-theme="dark"]{--bg:#14110f;--fg:#f2ede4;--mut:#a79d8e;--line:#3a322b;--card:#211c18;--acc:#ff5a1f;--acc2:#f2ede4;--onacc:#14110f}:root[data-theme="light"]{--bg:#ece6d9;--fg:#14110f;--mut:#6b6254;--line:#d3c9b4;--card:#f8f4ea;--acc:#c2370a;--acc2:#14110f;--onacc:#ffffff}
+:root{--panel:var(--card);--panel2:var(--card);--text:var(--fg);--muted:var(--mut);--accent:var(--acc);--accent2:var(--acc2);--line2:var(--line);--hairline:var(--line);--hairline-strong:var(--line);--danger:#ef4444}
+body{font-family:'Manrope',system-ui,sans-serif!important}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;line-height:1.55;min-height:100vh}
 a{color:inherit;text-decoration:none}
@@ -110,7 +112,7 @@ footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-s
 </div>
 
 <footer><div class="wrap">
-<p style="margin-bottom:2px">SkillForge — agent skills marketplace on BOT Chain. Live on mainnet; real assets with real value.</p>
+<p style="margin-bottom:2px">SkillForge — agent skills marketplace on BOT Chain. Live on mainnet; real skills with real receipts.</p>
 <div class="proof">
 <div class="proof-title">Proof on BOT Mainnet</div>
 <div class="proof-grid">
@@ -122,11 +124,19 @@ footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-s
 <a href="https://scan.botchain.ai/" target="_blank" rel="noopener" class="proof-link">BOTScan Explorer &#8599;</a>
 </div>
 </div>
+<p style="margin-top:14px"><a href="index.html">Home</a> · <a href="app.html">Open the app →</a> · <a href="docs.html">Docs</a></p>
 </div></footer>
 
 <script type="importmap">
 {"imports":{"ethers":"https://esm.sh/ethers@6.13.2","@reown/appkit":"https://esm.sh/@reown/appkit@1.8.21","@reown/appkit-adapter-ethers":"https://esm.sh/@reown/appkit-adapter-ethers@1.8.21"}}
 </script>
 <script type="module" src="app.js"></script>
+<script>
+(function(){try{var s=localStorage.getItem('botchain-theme');if(s)document.documentElement.dataset.theme=s;}catch(e){}
+var b=document.createElement('button');b.id='themeBtn';b.title='Theme';b.textContent=document.documentElement.dataset.theme==='light'?'\u261E':'\u2600';
+b.style.cssText='border:1px solid var(--line2,var(--line));background:transparent;color:inherit;border-radius:99px;width:38px;height:38px;font-size:15px;cursor:pointer;margin-left:10px';
+b.onclick=function(){var n=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=n;try{localStorage.setItem('botchain-theme',n)}catch(e){}b.textContent=n==='light'?'\u261E':'\u2600';};
+var nav=document.querySelector('nav');if(nav)nav.appendChild(b);})();
+</script>
 </body>
 </html>
