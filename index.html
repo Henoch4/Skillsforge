@@ -126,6 +126,22 @@ let curSym = 'WBOT';
 
 function rpc() { return new ethers.JsonRpcProvider(currentChainId === 677 ? 'https://rpc.botchain.ai' : 'https://rpc.bohr.life'); }
 const short = (a) => (a ? a.slice(0, 6) + '…' + a.slice(-4) : '—');
+
+function getProvider() {
+  try {
+    if (typeof appkit !== 'undefined' && appkit && typeof appkit.getWalletProvider === 'function') {
+      const p = appkit.getWalletProvider('eip155') || appkit.getWalletProvider();
+      if (p) return p;
+    }
+  } catch (e) {}
+  return null;
+}
+async function getSigner() {
+  const wp = getProvider();
+  if (!wp) { try { appkit.open(); } catch (e) {} return null; }
+  return new ethers.BrowserProvider(wp).getSigner();
+}
+
 const esc = (s) => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
 
 function initAppKit() {
@@ -203,7 +219,7 @@ if ($("#rw")) $("#rw").addEventListener("click", async (e) => {
   const i = +b.dataset.i;
   try {
     const c = CHAINS[currentChainId];
-    const s = await appkit.getSigner();
+    const s = await getSigner(); if (!s) return;;
     const me = await s.getAddress();
     const skR = new ethers.Contract(c.sk, SK_ABI, rpc());
     const info = await skR.getSkill(i);
@@ -235,7 +251,7 @@ if ($("#out")) $("#out").addEventListener("click", async (e) => {
   const realId = +(b.dataset.c || b.dataset.x);
   try {
     const c = CHAINS[currentChainId];
-    const s = await appkit.getSigner();
+    const s = await getSigner(); if (!s) return;;
     const sk = new ethers.Contract(c.sk, SK_ABI, s);
     const r = document.getElementById("r" + realId);
     if (isConfirm) {
@@ -261,7 +277,7 @@ if (pg) pg.addEventListener("click", async () => {
   if (!account) { appkit.open(); return; }
   try {
     const c = CHAINS[currentChainId];
-    const s = await appkit.getSigner();
+    const s = await getSigner(); if (!s) return;;
     const uri = $("#pl").value.trim() || ("ipfs://skill/" + n.toLowerCase().replace(/[^a-z0-9]+/g, "-"));
     const sk = new ethers.Contract(c.sk, SK_ABI, s);
     toast("Publishing…");
